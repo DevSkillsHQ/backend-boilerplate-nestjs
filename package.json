@@ -2,7 +2,7 @@
   "name": "backend-boilerplate",
   "version": "0.0.1",
   "scripts": {
-    "build": "cd app && npm run build",
+    "build": "cd app && npm install && npm run build",
     "start": "cd app && npm run start",
     "test": "cypress run"
   },
