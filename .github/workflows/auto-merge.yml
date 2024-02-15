@@ -59,7 +59,7 @@ jobs:
           port=$(echo $apiUrl | grep -o '[0-9]\+')
           echo "Extracted port: $port"
           echo "Waiting for application to start on port $port..."
-          npx wait-on http://localhost:3000/ping --timeout=10000
+          npx wait-on http://127.0.0.1:3000/ping --timeout=10000
       - name: Run tests
         uses: cypress-io/github-action@v5
 
