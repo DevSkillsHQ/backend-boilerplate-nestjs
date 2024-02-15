@@ -49,6 +49,10 @@ jobs:
         run: |
           API_URL=$(node -pe 'let config = JSON.parse(fs.readFileSync("./cypress.json", "utf8")).env.apiUrl; config.replace("localhost", "127.0.0.1")')
           echo "API_URL=${API_URL}" >> $GITHUB_ENV
+      - name: Check API_URL
+        run: echo "Checking API_URL:" ${{ env.API_URL }}
+      - name: List running services
+        run: netstat -tuln
       - name: Wait for application to start
         run: |
           echo "Waiting for application to start..."
