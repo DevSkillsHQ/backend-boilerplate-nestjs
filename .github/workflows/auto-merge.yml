@@ -21,10 +21,8 @@ jobs:
         run: npm run start &
         env:
           CI: true
-      - name: Wait for localhost:3000 to be ready
-        run: npx wait-on http://localhost:3000
-        env:
-          WAIT_ON_TIMEOUT: 10000
+      - name: Wait for port 3000 to be ready
+        run: npx wait-on tcp:3000 --timeout=10000
       - name: Run tests
         uses: cypress-io/github-action@v5
 
