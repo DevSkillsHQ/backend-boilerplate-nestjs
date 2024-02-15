@@ -13,16 +13,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install Dependencies
-        run: npm install
-      - name: Build Application
-        run: npm run build
-      - name: Cypress Tests
+      - name: Run tests
         uses: cypress-io/github-action@v5
         with:
+          build: npm run build
           start: npm run start
-          wait-on: 'http://127.0.0.1:3000'
-          wait-on-timeout: 300
 
   # Verifies the boilerplate can start and run in codespace environment
   test-for-codespaces:
@@ -44,22 +39,6 @@ jobs:
         run: npm run build
       - name: Start daemon
         run: npm run start &
-      - name: Extract apiUrl from cypress.json
-        id: set-env
-        run: |
-          API_URL=$(node -pe 'let config = JSON.parse(fs.readFileSync("./cypress.json", "utf8")).env.apiUrl; config.replace("localhost", "127.0.0.1")')
-          echo "API_URL=${API_URL}" >> $GITHUB_ENV
-      - name: Check API_URL
-        run: echo "Checking API_URL:" ${{ env.API_URL }}
-      - name: List running services
-        run: netstat -tuln
-      - name: Wait for application to start
-        run: |
-          echo "Waiting for application to start..."
-          while ! curl --output /dev/null --silent --head --fail ${{ env.API_URL }}; do
-            printf '.'
-            sleep 5
-          done
       - name: Run tests
         run: npm run test
 
