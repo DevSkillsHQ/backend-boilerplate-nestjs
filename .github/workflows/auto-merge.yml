@@ -50,7 +50,7 @@ jobs:
         with:
           build: npm run build
           start: npm run start
-          wait-on: 'npx wait-on --timeout 60000 http://localhost:3000'
+          wait-on: 'npx wait-on --timeout 60000 http://localhost:3000/ping'
 
   check-dependabot:
     needs:
