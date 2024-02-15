@@ -61,7 +61,7 @@ jobs:
           echo "Waiting for application to start on port $port..."
           npx wait-on tcp:$port --timeout=10000
       - name: Run tests
-        run: npm run test
+        uses: cypress-io/github-action@v5
 
   check-dependabot:
     needs:
