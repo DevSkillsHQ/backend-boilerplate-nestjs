@@ -45,11 +45,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Start daemon
+        run: npm run start &
+      - name: Install jq
+        run: sudo apt-get install jq
+      - name: Wait for application to start
+        run: |
+          apiUrl=$(jq -r '.env.apiUrl' ./cypress.json)
+          port=$(echo $apiUrl | grep -o '[0-9]\+')
+          echo "Extracted port: $port"
+          echo "Waiting for application to start on port $port..."
+          npx wait-on http://localhost:3000/ping --timeout=10000
       - name: Run tests
-        uses: cypress-io/github-action@v6
-        with:
-          build: npm run build
-          start: npm run start
+        uses: cypress-io/github-action@v5
 
   check-dependabot:
     needs:
