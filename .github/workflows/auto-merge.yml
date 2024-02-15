@@ -39,6 +39,24 @@ jobs:
         run: npm run build
       - name: Start daemon
         run: npm run start &
+      - name: Extract apiUrl from cypress.json
+        id: set-env
+        run: |
+          echo "API_URL=$(node -pe 'JSON.parse(fs.readFileSync("./cypress.json", "utf8")).env.apiUrl')" >> $GITHUB_ENV
+      - name: Wait for application to start
+        run: |
+          echo "Waiting for application to start..."
+          while ! curl --output /dev/null --silent --head --fail ${{ env.API_URL }}; do
+            printf '.'
+            sleep 5
+          done
+      - name: Wait for application to start
+        run: |
+          echo "Waiting for application to start..."
+          while ! curl --output /dev/null --silent --head --fail http://localhost:3000; do
+            printf '.'
+            sleep 5
+          done
       - name: Run tests
         run: npm run test
 
