@@ -13,11 +13,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Start Server
+        run: npm run start &
+        env:
+          CI: true
+      - name: Wait for localhost:3000 to be ready
+        run: npx wait-on http://localhost:3000
+        env:
+          WAIT_ON_TIMEOUT: 10000
       - name: Run tests
         uses: cypress-io/github-action@v5
-        with:
-          build: npm run build
-          start: npm run start
 
   # Verifies the boilerplate can start and run in codespace environment
   test-for-codespaces:
