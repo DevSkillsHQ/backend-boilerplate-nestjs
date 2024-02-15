@@ -21,7 +21,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           start: npm run start
-          wait-on: 'http://localhost:3000'
+          wait-on: 'http://127.0.0.1:3000'
           wait-on-timeout: 5000
 
   # Verifies the boilerplate can start and run in codespace environment
@@ -47,7 +47,8 @@ jobs:
       - name: Extract apiUrl from cypress.json
         id: set-env
         run: |
-          echo "API_URL=$(node -pe 'JSON.parse(fs.readFileSync("./cypress.json", "utf8")).env.apiUrl')" >> $GITHUB_ENV
+          API_URL=$(node -pe 'let config = JSON.parse(fs.readFileSync("./cypress.json", "utf8")).env.apiUrl; config.replace("localhost", "127.0.0.1")')
+          echo "API_URL=${API_URL}" >> $GITHUB_ENV
       - name: Wait for application to start
         run: |
           echo "Waiting for application to start..."
