@@ -19,10 +19,15 @@ jobs:
         run: npm run build
       - name: Start Server
         run: npm run start &
-        env:
-          CI: true
-      - name: Wait for port 3000 to be ready
-        run: npx wait-on tcp:3000 --timeout=10000
+      - name: Install jq
+        run: sudo apt-get install jq
+      - name: Wait for application to start
+        run: |
+          apiUrl=$(jq -r '.env.apiUrl' ./cypress.json)
+          port=$(echo $apiUrl | grep -o '[0-9]\+')
+          echo "Extracted port: $port"
+          echo "Waiting for application to start on port $port..."
+          npx wait-on tcp:$port --timeout=10000
       - name: Run tests
         uses: cypress-io/github-action@v5
 
@@ -46,6 +51,15 @@ jobs:
         run: npm run build
       - name: Start daemon
         run: npm run start &
+      - name: Install jq
+        run: sudo apt-get install jq
+      - name: Wait for application to start
+        run: |
+          apiUrl=$(jq -r '.env.apiUrl' ./cypress.json)
+          port=$(echo $apiUrl | grep -o '[0-9]\+')
+          echo "Extracted port: $port"
+          echo "Waiting for application to start on port $port..."
+          npx wait-on tcp:$port --timeout=10000
       - name: Run tests
         run: npm run test
 
